@@ -77,7 +77,7 @@ def index():
 
 @webhook.route('/events', methods=["GET"])
 def get_events():
-    events = mongo.db.events.find().sort("timestamp", -1).limit(10)
+    events = mongo.db.events.find().sort("timestamp", -1)
     return jsonify([
         {
             "message": event.get("message"),
