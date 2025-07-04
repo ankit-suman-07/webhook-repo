@@ -3,6 +3,19 @@ from app.extensions import mongo
 
 webhook = Blueprint('Webhook', __name__, url_prefix='/webhook')
 
+@webhook.route('/', methods=["GET"])
+def index():
+    return render_template("index.html")
+
+@webhook.route('/events', methods=["GET"])
+def get_events():
+    events = mongo.db.events.find().sort("timestamp", -1).limit(10)
+    return jsonify([
+        {
+            "message": event.get("message"),
+            "timestamp": event.get("timestamp")
+        } for event in events
+    ])
 
 @webhook.route('/receiver', methods=["POST"])
 def receiver():
