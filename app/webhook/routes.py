@@ -14,6 +14,15 @@ def receiver():
     now = datetime.utcnow()
     timestamp_str = now.strftime('%Y-%m-%dT%H:%M:%SZ')  # ISO 8601 UTC format string
 
+    # Human-readable version for message string
+    def suffix(d):
+        return "th" if 11 <= d <= 13 else {1: "st", 2: "nd", 3: "rd"}.get(d % 10, "th")
+
+    def format_pretty_date(dt):
+        return dt.strftime(f"%-d{suffix(dt.day)} %B %Y - %-I:%M %p UTC")
+
+    readable_timestamp = format_pretty_date(now)
+
     doc = {
         "timestamp": timestamp_str
     }
@@ -31,8 +40,8 @@ def receiver():
             "action": "PUSH",
             "from_branch": "",  # Not applicable
             "to_branch": to_branch,
-            "message": f"{author} pushed to {to_branch} at {timestamp_str}"
-        })
+            "message": f"{author} pushed to {to_branch} on {readable_timestamp}"
+        }) # Sample: "Travis" pushed to "staging" on 1st April 2021 - 9:30 PM UTC
 
     elif event_type == "pull_request":
         action = payload.get("action")
@@ -49,8 +58,8 @@ def receiver():
                 "action": "PULL_REQUEST",
                 "from_branch": from_branch,
                 "to_branch": to_branch,
-                "message": f"{author} submitted a pull request from {from_branch} to {to_branch} at {timestamp_str}"
-            })
+                "message": f"{author} submitted a pull request from {from_branch} to {to_branch} on {timestamp_str}"
+            }) # Travis" submitted a pull request from "staging" to "master" on 1st April 2021 - 9:00 AM UTC
 
         elif action == "closed" and pr.get("merged"):
             doc.update({
@@ -59,8 +68,8 @@ def receiver():
                 "action": "MERGE",
                 "from_branch": from_branch,
                 "to_branch": to_branch,
-                "message": f"{author} merged branch {from_branch} to {to_branch} at {timestamp_str}"
-            })
+                "message": f"{author} merged branch {from_branch} to {to_branch} on {timestamp_str}"
+            }) # Travis" merged branch "dev" to "master" on 2nd April 2021 - 12:00 PM UTC
         else:
             return jsonify({"message": "Unhandled pull_request action"}), 204
 
