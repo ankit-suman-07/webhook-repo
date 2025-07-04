@@ -1,10 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <title>GitHub Webhook Events</title>
 </head>
 <body>
+  <h2>GitHub Webhook Events</h2>
+  <div id="log"></div>
 
+  <script>
+    function fetchEvents() {
+      fetch("/webhook/events")
+        .then(res => res.json())
+        .then(data => {
+          const log = document.getElementById("log");
+          log.innerHTML = "";
+          data.forEach(event => {
+            const div = document.createElement("div");
+            div.textContent = `${event.message} at ${new Date(event.timestamp).toUTCString()}`;
+            log.appendChild(div);
+          });
+        });
+    }
+    setInterval(fetchEvents, 15000);
+    window.onload = fetchEvents;
+  </script>
 </body>
 </html>
