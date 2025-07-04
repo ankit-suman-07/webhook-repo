@@ -1,7 +1,8 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, render_template
 from app.extensions import mongo
 
 webhook = Blueprint('Webhook', __name__, url_prefix='/webhook')
+
 
 @webhook.route('/receiver', methods=["POST"])
 def receiver():
