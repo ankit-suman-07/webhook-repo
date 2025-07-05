@@ -40,7 +40,7 @@ def receiver():
             "action": "PUSH",
             "from_branch": "",
             "to_branch": to_branch,
-            "message": f"{author} pushed to {to_branch} on {readable_timestamp}"
+            "message": f"\"{author}\" pushed to \"{to_branch}\" on {readable_timestamp}"
         }) # Sample: "Travis" pushed to "staging" on 1st April 2021 - 9:30 PM UTC
 
     # PULL REQUEST event
@@ -59,7 +59,7 @@ def receiver():
                 "action": "PULL_REQUEST",
                 "from_branch": from_branch,
                 "to_branch": to_branch,
-                "message": f"{author} submitted a pull request from {from_branch} to {to_branch} on {timestamp_str}"
+                "message": f"\"{author}\" submitted a pull request from \"{from_branch}\" to \"{to_branch}\" on {timestamp_str}"
             }) # "Travis" submitted a pull request from "staging" to "master" on 1st April 2021 - 9:00 AM UTC
 
         # MERGE event
@@ -70,7 +70,7 @@ def receiver():
                 "action": "MERGE",
                 "from_branch": from_branch,
                 "to_branch": to_branch,
-                "message": f"{author} merged branch {from_branch} to {to_branch} on {timestamp_str}"
+                "message": f"\"{author}\" merged branch \"{from_branch}\" to \"{to_branch}\" on {timestamp_str}"
             }) # "Travis" merged branch "dev" to \"master\" on 2nd April 2021 - 12:00 PM UTC
         else:
             return jsonify({"message": "Unhandled pull_request action"}), 204
