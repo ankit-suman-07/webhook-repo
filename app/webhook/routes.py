@@ -40,7 +40,7 @@ def receiver():
             "action": "PUSH",
             "from_branch": "",
             "to_branch": to_branch,
-            "message": f"\"{author}\" pushed to \"{to_branch}\" on {readable_timestamp}"
+            "message": f"<b>\"{author}\"</b> pushed to \"{to_branch}\" on {readable_timestamp}"
         }) # Sample: "Travis" pushed to "staging" on 1st April 2021 - 9:30 PM UTC
 
     # PULL REQUEST event

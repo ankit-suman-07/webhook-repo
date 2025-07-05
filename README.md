@@ -79,9 +79,10 @@ Each webhook event is stored using the following schema:
 
 ## 📦 Dependencies
 - Flask 
+- Flask-Login
 - Flask-PyMongo 
 - Flask-CORS 
-- Requests 
+- pymongo 
 - Python-dotenv
 
 ***
