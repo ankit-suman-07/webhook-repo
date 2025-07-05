@@ -7,7 +7,7 @@ A Flask-based application that captures **GitHub Webhook Events** (`PUSH`, `PULL
 ## 🚀 Live Demo
 
 - 🔗 **Frontend/UI:**  
-  [https://webhook-repo-kwo9.onrender.com/webhook/](https://webhook-repo-kwo9.onrender.com/webhook/)
+  [https://dazzling-mousse-419046.netlify.app/](https://dazzling-mousse-419046.netlify.app/)
 
 - 🔗 **Webhook Endpoint:**  
   `POST https://webhook-repo-kwo9.onrender.com/webhook/receiver`
