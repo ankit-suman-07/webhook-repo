@@ -28,6 +28,7 @@ def receiver():
         "timestamp": timestamp_str
     }
 
+    # PUSH event
     if event_type == "push":
         author = payload.get("pusher", {}).get("name", "unknown")
         to_branch = payload.get("ref", "").split("/")[-1]
@@ -42,6 +43,7 @@ def receiver():
             "message": f"{author} pushed to {to_branch} on {readable_timestamp}"
         }) # Sample: "Travis" pushed to "staging" on 1st April 2021 - 9:30 PM UTC
 
+    # PULL REQUEST event
     elif event_type == "pull_request":
         action = payload.get("action")
         pr = payload.get("pull_request", {})
@@ -58,8 +60,9 @@ def receiver():
                 "from_branch": from_branch,
                 "to_branch": to_branch,
                 "message": f"{author} submitted a pull request from {from_branch} to {to_branch} on {timestamp_str}"
-            }) # Travis" submitted a pull request from "staging" to "master" on 1st April 2021 - 9:00 AM UTC
+            }) # "Travis" submitted a pull request from "staging" to "master" on 1st April 2021 - 9:00 AM UTC
 
+        # MERGE event
         elif action == "closed" and pr.get("merged"):
             doc.update({
                 "request_id": request_id,
@@ -68,7 +71,7 @@ def receiver():
                 "from_branch": from_branch,
                 "to_branch": to_branch,
                 "message": f"{author} merged branch {from_branch} to {to_branch} on {timestamp_str}"
-            }) # \"Travis\" merged branch "dev" to \"master\" on 2nd April 2021 - 12:00 PM UTC
+            }) # "Travis" merged branch "dev" to \"master\" on 2nd April 2021 - 12:00 PM UTC
         else:
             return jsonify({"message": "Unhandled pull_request action"}), 204
 
@@ -80,7 +83,7 @@ def receiver():
 
 @webhook.route('/', methods=["GET"])
 def index():
-    return render_template("index.html")
+    return "<h2>WebHook App Using Flask</h2>"
 
 @webhook.route('/events', methods=["GET"])
 def get_events():
