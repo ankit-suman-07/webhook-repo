@@ -7,7 +7,7 @@ from app.extensions import mongo
 from app.webhook.routes import webhook
 
 
-# Creating our flask app
+# Flask app
 def create_app():
     load_dotenv()
     app = Flask(__name__)
@@ -19,7 +19,6 @@ def create_app():
 
     mongo.init_app(app)
     
-    # registering all the blueprints
     app.register_blueprint(webhook)
 
     @app.route("/test-mongo")
@@ -29,7 +28,7 @@ def create_app():
             mongo.db.test_collection.insert_one({"status": "ok"})
             return jsonify({"status": "Mongo working"}), 200
         except Exception as e:
-            print("🔥 Error in /test-mongo:", repr(e))  # ← More detailed error
+            print("🔥 Error in /test-mongo:", repr(e))
             return jsonify({"error": str(e)}), 500
     
     return app

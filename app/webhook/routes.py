@@ -12,9 +12,10 @@ def receiver():
     event_type = request.headers.get('X-GitHub-Event')
     payload = request.get_json()
     now = datetime.utcnow()
-    timestamp_str = now.strftime('%Y-%m-%dT%H:%M:%SZ')  # ISO 8601 UTC format string
+    # ISO 8601 UTC format string
+    timestamp_str = now.strftime('%Y-%m-%dT%H:%M:%SZ')
 
-    # Human-readable version for message string
+    # Human-readable version for date string
     def suffix(d):
         return "th" if 11 <= d <= 13 else {1: "st", 2: "nd", 3: "rd"}.get(d % 10, "th")
 
@@ -28,17 +29,15 @@ def receiver():
     }
 
     if event_type == "push":
-        # Extract values
         author = payload.get("pusher", {}).get("name", "unknown")
         to_branch = payload.get("ref", "").split("/")[-1]
-        request_id = payload.get("head_commit", {}).get("id", "")  # fallback if not available
+        request_id = payload.get("head_commit", {}).get("id", "")
 
-        # Populate document
         doc.update({
             "request_id": request_id,
             "author": author,
             "action": "PUSH",
-            "from_branch": "",  # Not applicable
+            "from_branch": "",
             "to_branch": to_branch,
             "message": f"{author} pushed to {to_branch} on {readable_timestamp}"
         }) # Sample: "Travis" pushed to "staging" on 1st April 2021 - 9:30 PM UTC
@@ -69,14 +68,13 @@ def receiver():
                 "from_branch": from_branch,
                 "to_branch": to_branch,
                 "message": f"{author} merged branch {from_branch} to {to_branch} on {timestamp_str}"
-            }) # Travis" merged branch "dev" to "master" on 2nd April 2021 - 12:00 PM UTC
+            }) # \"Travis\" merged branch "dev" to \"master\" on 2nd April 2021 - 12:00 PM UTC
         else:
             return jsonify({"message": "Unhandled pull_request action"}), 204
 
     else:
         return jsonify({"message": "Unsupported event type"}), 204
 
-    # Insert into MongoDB
     mongo.db.events.insert_one(doc)
     return jsonify({"status": "stored"}), 200
 
